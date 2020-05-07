@@ -8,9 +8,9 @@ public class VineGrow : MonoBehaviour {
   // inspector values
   public AnimationCurve growCurve;
   public float growSpeed;
-  public GameObject[] vineParts;
 
-
+  List<GameObject> growParts;
+  
   int vineSize;
 
   GameObject[] leaves;
@@ -20,15 +20,14 @@ public class VineGrow : MonoBehaviour {
   public Vector3 axisScale;
 
   private void OnEnable() {
-    vineSize = vineParts.Length;
+    growParts = new List<GameObject>();
+    
     initailizeGrowObject();
   }
 
   private void Update() {
     if (Input.GetKeyDown(KeyCode.E)) {
       Debug.Log("Growing Vine");
-
-      //StartCoroutine(GrowPart(0));
       StartCoroutine(Curve(0));
     }
   }
@@ -37,7 +36,9 @@ public class VineGrow : MonoBehaviour {
     foreach (Transform child in transform) {
       child.gameObject.SetActive(false);
       child.transform.localScale = new Vector2(0f, 0f);
+      growParts.Add(child.gameObject);
     }
+    vineSize = growParts.Count;
   }
 
   IEnumerator Curve(int vineIndex) {
@@ -46,16 +47,16 @@ public class VineGrow : MonoBehaviour {
       yield break;
     }
     Debug.Log("Vine " + vineIndex);
-    GameObject vine = vineParts[vineIndex];
+    GameObject vine = growParts[vineIndex];
     StartCoroutine(Grow(vine));
-    yield return new WaitForSeconds(growSpeed / vineSize);
+    yield return new WaitForSeconds(1 - growSpeed);
     StartCoroutine(Curve(vineIndex + 1));
   }
 
 
   IEnumerator Grow(GameObject obj) {
     Vector2 initialScale = obj.transform.localScale;
-    Vector3 finalScale = new Vector2(1f, 1f);
+    Vector3 finalScale = new Vector2(1f, -1f);
 
     //obj.transform.localScale = initialScale;
     obj.SetActive(true);

@@ -15,6 +15,8 @@ public class VineGrowEditor : Editor {
     // growth speed
     myScript.growSpeed = EditorGUILayout.Slider("Growth Speed", myScript.growSpeed, 0.1f, 1.0f);
 
+   
+
     // axis scales
     myScript.constantAxis = GUILayout.Toggle(myScript.constantAxis, "Use Constant Axis");
     if (!myScript.constantAxis) {
